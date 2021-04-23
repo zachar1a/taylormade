@@ -14,7 +14,6 @@ class writeData:
         pathToHistoricalData = '../Historical Data/'
         if fileName in os.listdir(pathToHistoricalData):
             os.chdir(pathToHistoricalData)
-            print("here")
             self.writeToFile(fileName, data)
         else:
             os.chdir(pathToHistoricalData)

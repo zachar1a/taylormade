@@ -42,7 +42,6 @@ def readDataTable(shoeName):
         size = tr.find_elements_by_tag_name('td')[2].text
         price= tr.find_elements_by_tag_name('td')[3].text
         data = (date, time, size, price)
-        print(shoeName)
         wd.openFileOrCreateFile(shoeName, data)
         print(tr.text)
 
