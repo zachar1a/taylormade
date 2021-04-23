@@ -19,17 +19,25 @@ class writeData:
         else:
             os.chdir(pathToHistoricalData)
             with open(fileName, 'a', newline='') as file:
-                csv.writer(file).writerow(['Date', 'Size', 'Price'])
+                csv.writer(file).writerow(['Date', 'Time', 'Size', 'Price'])
                 file.close()
             self.writeToFile(fileName, data)
 
-    def returnDateAndTimeArray(fileName):
+'''
+    def returnDateAndTimeArray(self, fileName):
         timeArray = []
-        with open(fileName, 'r') as file:
-            for row in file:
-                print(row['Time'])
-                timeArray.append((row['Date'],row['Time']))
-        return timeArray
-            
-
-
+        pathToHistoricalData = '../Historical Data/'
+        resetPath = '../Scrappers/'
+        if fileName in os.listdir(pathToHistoricalData):
+            os.chdir(pathToHistoricalData)
+            with open(fileName, 'r') as file:
+                file = csv.DictReader(file)
+                for row in file:
+                    print(row['Time'])
+                    timeArray.append((row['Date'],row['Time']))
+            os.chdir(resetPath)
+            return timeArray
+        else:
+            os.chdir(resetPath)
+            return None
+'''

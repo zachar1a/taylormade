@@ -17,11 +17,6 @@ def activateLoadMoreButtons():
         while(driver.find_element_by_css_selector('button.css-13xjp80')):
             driver.find_element_by_css_selector('button.css-13xjp80').click()
             time.sleep(1)
-
-        '''
-        while(driver.find_element_by_xpath('//*[@id="chakra-modal--body-59"]/div/button')):
-            driver.find_element_by_xpath('//*[@id="chakra-modal--body-59"]/div/button').click()
-        '''
     except:
         print("Either finished or no button")
         readDataTable(shoeName)
@@ -46,13 +41,9 @@ def readDataTable(shoeName):
         time = tr.find_elements_by_tag_name('td')[1].text
         size = tr.find_elements_by_tag_name('td')[2].text
         price= tr.find_elements_by_tag_name('td')[3].text
-        data = (date, size, price)
-        dateAndTimeArray= wd.returnDateAndTimeArray(shoeName)
-        for data in dateAndTimeArray:
-            if date not in data and time not in data:
-                wd.openFileOrCreateFile(shoeName, data)
-            else:
-                continue
+        data = (date, time, size, price)
+        print(shoeName)
+        wd.openFileOrCreateFile(shoeName, data)
         print(tr.text)
 
 def showDataTable(url):
@@ -70,19 +61,8 @@ def showDataTable(url):
     driver.find_element_by_xpath('//*[@id="market-summary"]/div[2]/div/div[2]/div[3]/button').click()
     activateLoadMoreButtons()
 
-
-# Need to use this for a hibbet scrapper
-'''
-def find():
-    driver.get('https://www.hibbett.com/men/mens-shoes/?start=0&sz=24')
-
-    shoeList = driver.find_elements_by_class_name('name-link');
-    for shoe in shoeList:
-        print(shoe.text)
-'''
-
 # find()
 showDataTable('https://stockx.com/nike-blazer-mid-77-vintage-white-black')
-#showDataTable('https://stockx.com/adidas-yeezy-boost-700-bright-blue')
+showDataTable('https://stockx.com/adidas-yeezy-boost-700-bright-blue')
 showDataTable('https://stockx.com/nike-air-presto-off-white')
 #driver.close()
