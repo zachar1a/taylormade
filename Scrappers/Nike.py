@@ -1,8 +1,7 @@
-import requests, json
-import urllib.request
-from bs4 import BeautifulSoup as bs
-from bs4 import BeautifulSoup
+from selenium import webdriver
+import requests, json, time, csv
 
+driver = webdriver.Safari()
 
 
 # This is a basic get request to stockX and in order
@@ -24,10 +23,26 @@ result = requests.get(url, headers=headers)
 # Need to put these into a database
 
 url = 'https://www.nike.com/w/mens-lifestyle-shoes-13jrmznik1zy7ok'
-result = requests.get(url)
-soup = BeautifulSoup(result.text, 'html.parser')
 
-allP = soup.find_all('a', class_="product-card__link-overlay")
 
-for link in allP:
-    print(link.text + " " + link.attrs['href'])
+driver.get(url)
+
+def goToBottom():
+    lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
+    match=False
+    while(match==False):
+        lastCount = lenOfPage
+        time.sleep(5)
+        lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
+        if lastCount==lenOfPage:
+            match=True
+
+shoes = driver.find_elements_by_class_name('product-card__body')
+#shoes = driver.find_elements_by_class_name('product-card__title')
+
+goToBottom()
+for shoe in shoes:
+    link = shoe.find_element_by_class_name('product-card__link-overlay')
+    print(link.text)
+    print(link.get_attribute('href'))
+    print('')
