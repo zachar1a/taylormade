@@ -1,5 +1,7 @@
 from selenium import webdriver
-import requests, json, time, csv
+import requests, json, time, csv, os
+from writeData import writeData
+from expandData import expandData
 
 driver = webdriver.Safari()
 
@@ -22,10 +24,11 @@ result = requests.get(url, headers=headers)
 # and then going to save the links and the images
 # Need to put these into a database
 
-url = 'https://www.nike.com/w/mens-lifestyle-shoes-13jrmznik1zy7ok'
+lifestyle = 'https://www.nike.com/w/mens-lifestyle-shoes-13jrmznik1zy7ok'
+jordan = 'https://www.nike.com/w/mens-jordan-shoes-37eefznik1zy7ok'
+running = 'https://www.nike.com/w/mens-running-shoes-37v7jznik1zy7ok'
+basketball = 'https://www.nike.com/w/mens-basketball-shoes-3glsmznik1zy7ok'
 
-
-driver.get(url)
 
 def goToBottom():
     lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
@@ -37,12 +40,50 @@ def goToBottom():
         if lastCount==lenOfPage:
             match=True
 
-shoes = driver.find_elements_by_class_name('product-card__body')
 #shoes = driver.find_elements_by_class_name('product-card__title')
 
-goToBottom()
+def writeToFile(brand, fileName, data):
+    resetPath = '../../Scrappers'
+    pathToBrandData = '../Brand Data/'
+    if brand in os.listdir(pathToBrandData):
+        if fileName in os.listdir(pathToBrandData + brand):
+            os.chdir(pathToBrandData + brand)
+            wd = writeData()
+            wd.writeToFile(fileName,data)
+            os.chdir(resetPath)
+        else:
+            os.chdir(pathToBrandData + brand)
+            with open(fileName, 'a', newline='') as file:
+                csv.writer(file).writerow(['Shoe', 'Link'])
+                file.close()
+                writeToFile('Nike',fileName, data)
+
+def findShoesOnPage(url):
+    driver.get(url) 
+
+    goToBottom()
+
+    shoes = driver.find_elements_by_class_name('product-card__body')
+    for shoe in shoes:
+        link = shoe.find_element_by_class_name('product-card__link-overlay')
+        print(link.text)
+        print(link.get_attribute('href'))
+        print('')
+        data = (link.text, link.get_attribute('href'))
+        writeToFile('Nike','baseData.csv',data)
+
+
+#findShoesOnPage(lifestyle)
+#findShoesOnPage(jordan)
+#findShoesOnPage(running)
+#findShoesOnPage(basketball)
+
+expand = expandData()
+shoes = expand.getCsvData('Nike', 'baseData.csv')
+
 for shoe in shoes:
-    link = shoe.find_element_by_class_name('product-card__link-overlay')
-    print(link.text)
-    print(link.get_attribute('href'))
-    print('')
+    print(shoe['Link'])
+    expand.getShoeDetails(driver,'Nike', 'Nike.csv', shoe['Link'])
+
+
+driver.close()

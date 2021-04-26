@@ -22,6 +22,20 @@ class writeData:
                 file.close()
             self.writeToFile(fileName, data)
 
+    def openFileOrCreateFileNike(self, fileName, data):
+        pathToNike = '../Shoe Brands/Nike/'
+        if fileName in os.listdir(pathToHistoricalData):
+            os.chdir(pathToHistoricalData)
+            self.writeToFile(fileName, data)
+        else:
+            os.chdir(pathToHistoricalData)
+            with open(fileName, 'a', newline='') as file:
+                csv.writer(file).writerow(['Date', 'Time', 'Size', 'Price'])
+                file.close()
+            self.writeToFile(fileName, data)
+
+
+
 '''
     def returnDateAndTimeArray(self, fileName):
         timeArray = []
