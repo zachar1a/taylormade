@@ -1,6 +1,11 @@
 import os, csv
 
 class writeData:
+    '''
+    This class is used to create files
+    for historical data
+    '''
+
     def __init__(self):
         print('initing')
 

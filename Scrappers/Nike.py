@@ -31,6 +31,11 @@ basketball = 'https://www.nike.com/w/mens-basketball-shoes-3glsmznik1zy7ok'
 
 
 def goToBottom():
+    '''
+    Use this to auto scroll to bottom of page in viewport to loard more items
+    in a non-pagenazed web page
+    '''
+
     lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
     match=False
     while(match==False):
@@ -42,21 +47,26 @@ def goToBottom():
 
 #shoes = driver.find_elements_by_class_name('product-card__title')
 
-def writeToFile(brand, fileName, data):
+def writeToFile(fileName, data):
+    '''
+    Checks if file is in dir if not
+    then creates it
+    '''
+
     resetPath = '../../Scrappers'
     pathToBrandData = '../Brand Data/'
-    if brand in os.listdir(pathToBrandData):
-        if fileName in os.listdir(pathToBrandData + brand):
-            os.chdir(pathToBrandData + brand)
+    if 'Nike' in os.listdir(pathToBrandData):
+        if fileName in os.listdir(pathToBrandData + 'Nike'):
+            os.chdir(pathToBrandData + 'Nike')
             wd = writeData()
             wd.writeToFile(fileName,data)
             os.chdir(resetPath)
         else:
-            os.chdir(pathToBrandData + brand)
+            os.chdir(pathToBrandData + 'Nike')
             with open(fileName, 'a', newline='') as file:
                 csv.writer(file).writerow(['Shoe', 'Link'])
                 file.close()
-                writeToFile('Nike',fileName, data)
+                writeToFile(fileName, data)
 
 def findShoesOnPage(url):
     driver.get(url) 
@@ -70,7 +80,7 @@ def findShoesOnPage(url):
         print(link.get_attribute('href'))
         print('')
         data = (link.text, link.get_attribute('href'))
-        writeToFile('Nike','baseData.csv',data)
+        writeToFile('baseData.csv',data)
 
 
 #findShoesOnPage(lifestyle)

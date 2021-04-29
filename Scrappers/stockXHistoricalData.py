@@ -60,6 +60,10 @@ def showDataTable(url):
     driver.find_element_by_xpath('//*[@id="market-summary"]/div[2]/div/div[2]/div[3]/button').click()
     activateLoadMoreButtons()
 
+# TODO  
+# Create a function wrapper that takes in shoe links
+# found in brand data files
+
 # find()
 showDataTable('https://stockx.com/nike-blazer-mid-77-vintage-white-black')
 showDataTable('https://stockx.com/adidas-yeezy-boost-700-bright-blue')

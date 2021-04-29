@@ -9,6 +9,12 @@ class expandData:
         self.resetPath = '../../Scrappers/'
 
     def getCsvData(self, brand, fileName):
+        '''
+        Checks if specified file is in a specified dir
+        then reads in the csv data. The files used are
+        auto generated with Shoe and Link columns
+        '''
+
         data = []
         if brand in os.listdir(self.pathToBrandData):
             if fileName in os.listdir(self.pathToBrandData + brand):
@@ -24,6 +30,12 @@ class expandData:
                     os.chdir(self.resetPath)
                     return data
     def writeToFile(self, brand, fileName, data):
+        '''
+        Writes data to specified file in speficied dir
+        the files have columns Shoe, Sizes and Colorways
+        The Sizes and Colorways are both arrays
+        '''
+
         if brand in os.listdir(self.pathToBrandData):
             if fileName in os.listdir(self.pathToBrandData + brand):
                 os.chdir(self.pathToBrandData + brand)
@@ -39,6 +51,11 @@ class expandData:
 
 
     def getShoeDetails(self, driver, brand, fileName, shoeLink):
+        '''
+        Scrapes data from specified url, the data we are getting
+        are Colorways and Sizes
+        '''
+
         driver.get(shoeLink)
 
         name = driver.find_element_by_id('pdp_product_title').text
