@@ -83,9 +83,9 @@ def findShoesOnPage(url):
         writeToFile('baseData.csv',data)
 
 
-#findShoesOnPage(lifestyle)
-#findShoesOnPage(jordan)
-#findShoesOnPage(running)
+findShoesOnPage(lifestyle)
+findShoesOnPage(jordan)
+findShoesOnPage(running)
 findShoesOnPage(basketball)
 
 expand = expandData()
