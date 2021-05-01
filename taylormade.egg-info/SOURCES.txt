@@ -1,5 +1,0 @@
-setup.py
-taylormade.egg-info/PKG-INFO
-taylormade.egg-info/SOURCES.txt
-taylormade.egg-info/dependency_links.txt
-taylormade.egg-info/top_level.txt
