@@ -1,7 +1,7 @@
 from selenium import webdriver
 import requests, json, time, csv, os
-from .writeData import writeData
-from .expandData import expandData
+from writeData import writeData
+from expandData import expandData
 
 driver = webdriver.Safari()
 

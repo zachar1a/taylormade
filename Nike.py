@@ -1,4 +1,4 @@
-from .Scrappers import Nike
+from Scrappers import Nike
 
 
 Nike.main()
