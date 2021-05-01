@@ -1,7 +1,7 @@
 from selenium import webdriver
 import requests, json, time, csv, os
-from writeData import writeData
-from expandData import expandData
+from .writeData import writeData
+from .expandData import expandData
 
 driver = webdriver.Safari()
 
@@ -83,17 +83,20 @@ def findShoesOnPage(url):
         writeToFile('baseData.csv',data)
 
 
-findShoesOnPage(lifestyle)
-findShoesOnPage(jordan)
-findShoesOnPage(running)
-findShoesOnPage(basketball)
+def main():
+    findShoesOnPage(lifestyle)
+    findShoesOnPage(jordan)
+    findShoesOnPage(running)
+    findShoesOnPage(basketball)
 
-expand = expandData()
-shoes = expand.getCsvData('Nike', 'baseData.csv')
+    expand = expandData()
+    shoes = expand.getCsvData('Nike', 'baseData.csv')
 
-for shoe in shoes:
-    print(shoe['Link'])
-    expand.getShoeDetails(driver,'Nike', 'Nike.csv', shoe['Link'])
+    for shoe in shoes:
+        print(shoe['Link'])
+        expand.getShoeDetails(driver,'Nike', 'Nike.csv', shoe['Link'])
 
+if __name__ == '__main__':
+    main()
 
 driver.close()
