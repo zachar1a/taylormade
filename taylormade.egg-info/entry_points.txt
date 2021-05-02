@@ -1,0 +1,4 @@
+[console_scripts]
+main = Scrappers.Nike:main
+nike = Nike:main
+

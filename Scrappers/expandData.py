@@ -1,6 +1,6 @@
 from selenium import webdriver
 import csv, time, os
-from writeData import writeData
+from . import writeData.writeData as writeData
 
 
 class expandData:

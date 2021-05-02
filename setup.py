@@ -5,7 +5,7 @@ from Scrappers import writeData
 setup(
         name='taylormade',
         include_package_data=True,
-        packages=['Scrappers.writeData', 'Scrappers.expandData'],
+        py_modules=['Scrappers.writeData', 'Scrappers.expandData'],
         entry_points={
             'console_scripts':[
                 'nike=Nike:main',

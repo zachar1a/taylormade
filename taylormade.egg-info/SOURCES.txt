@@ -1,0 +1,13 @@
+setup.py
+Scrappers/Nike.py
+Scrappers/__init__.py
+Scrappers/expandData.py
+Scrappers/hibbett.py
+Scrappers/stockXHistoricalData.py
+Scrappers/test.py
+Scrappers/writeData.py
+taylormade.egg-info/PKG-INFO
+taylormade.egg-info/SOURCES.txt
+taylormade.egg-info/dependency_links.txt
+taylormade.egg-info/entry_points.txt
+taylormade.egg-info/top_level.txt
