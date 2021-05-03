@@ -1,7 +1,7 @@
 from selenium import webdriver
 import requests, json, time, csv, os
-from . import writeData as writeData
-import expandData.expandData as expandData
+from .writeData import writeData
+from .expandData import expandData
 
 driver = webdriver.Safari()
 
@@ -23,14 +23,7 @@ result = requests.get(url, headers=headers)
 # this is page one of lifestyle shoes page. I am iterating over all of the shoes
 # and then going to save the links and the images
 # Need to put these into a database
-
-lifestyle = 'https://www.nike.com/w/mens-lifestyle-shoes-13jrmznik1zy7ok'
-jordan = 'https://www.nike.com/w/mens-jordan-shoes-37eefznik1zy7ok'
-running = 'https://www.nike.com/w/mens-running-shoes-37v7jznik1zy7ok'
-basketball = 'https://www.nike.com/w/mens-basketball-shoes-3glsmznik1zy7ok'
-
-
-def goToBottom():
+def goToBottom(driver):
     '''
     Use this to auto scroll to bottom of page in viewport to loard more items
     in a non-pagenazed web page
@@ -53,8 +46,9 @@ def writeToFile(fileName, data):
     then creates it
     '''
 
-    resetPath = '../../Scrappers'
-    pathToBrandData = '../Brand Data/'
+    resetPath = '../../'
+    pathToBrandData = 'Brand Data/'
+    print(os.getcwd())
     if 'Nike' in os.listdir(pathToBrandData):
         if fileName in os.listdir(pathToBrandData + 'Nike'):
             os.chdir(pathToBrandData + 'Nike')
@@ -68,10 +62,10 @@ def writeToFile(fileName, data):
                 file.close()
                 writeToFile(fileName, data)
 
-def findShoesOnPage(url):
+def findShoesOnPage(driver, url):
     driver.get(url) 
 
-    goToBottom()
+    #goToBottom(driver)
 
     shoes = driver.find_elements_by_class_name('product-card__body')
     for shoe in shoes:
@@ -83,13 +77,21 @@ def findShoesOnPage(url):
         writeToFile('baseData.csv',data)
 
 
-def main():
-    findShoesOnPage(lifestyle)
-    findShoesOnPage(jordan)
-    findShoesOnPage(running)
-    findShoesOnPage(basketball)
+def main(driver):
+    os.chdir('Scrappers/')
+
+    lifestyle = 'https://www.nike.com/w/mens-lifestyle-shoes-13jrmznik1zy7ok'
+    jordan = 'https://www.nike.com/w/mens-jordan-shoes-37eefznik1zy7ok'
+    running = 'https://www.nike.com/w/mens-running-shoes-37v7jznik1zy7ok'
+    basketball = 'https://www.nike.com/w/mens-basketball-shoes-3glsmznik1zy7ok'
+
+    #findShoesOnPage(driver,lifestyle)
+    #findShoesOnPage(driver,jordan)
+    findShoesOnPage(driver,running)
+    #findShoesOnPage(driver,basketball)
 
     expand = expandData()
+    print(os.getcwd())
     shoes = expand.getCsvData('Nike', 'baseData.csv')
 
     for shoe in shoes:

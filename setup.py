@@ -9,6 +9,7 @@ setup(
         entry_points={
             'console_scripts':[
                 'nike=Nike:main',
+                'hibbett=Scrappers.hibbett:main',
                 'main=Scrappers.Nike:main'
                 ]
         },

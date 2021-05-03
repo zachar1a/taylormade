@@ -1,4 +1,5 @@
 [console_scripts]
+hibbett = Scrappers.hibbett:main
 main = Scrappers.Nike:main
 nike = Nike:main
 

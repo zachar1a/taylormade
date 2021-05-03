@@ -1,12 +1,15 @@
 from selenium import webdriver
 import csv, time, os
-from . import writeData.writeData as writeData
+from .writeData import writeData
 
 
 class expandData:
+
+
     def __init__(self):
-        self.pathToBrandData = '../Brand Data/'
-        self.resetPath = '../../Scrappers/'
+        self.pathToBrandData = 'Brand Data/'
+        self.resetPath = '../../'
+
 
     def getCsvData(self, brand, fileName):
         '''
@@ -29,6 +32,8 @@ class expandData:
 
                     os.chdir(self.resetPath)
                     return data
+
+
     def writeToFile(self, brand, fileName, data):
         '''
         Writes data to specified file in speficied dir
@@ -36,6 +41,9 @@ class expandData:
         The Sizes and Colorways are both arrays
         '''
 
+        print(os.getcwd())
+        if os.getcwd() == '/Users/zachar1a/Desktop/taylormade/Scrappers/Brand Data/Nike':
+            os.chdir(self.resetPath)
         if brand in os.listdir(self.pathToBrandData):
             if fileName in os.listdir(self.pathToBrandData + brand):
                 os.chdir(self.pathToBrandData + brand)
@@ -48,6 +56,7 @@ class expandData:
                     csv.writer(file).writerow(['Shoe', 'Sizes', 'Colorways'])
                     file.close()
                     self.writeToFile('Nike',fileName, data)
+                os.chdir(self.resetPath)
 
 
     def getShoeDetails(self, driver, brand, fileName, shoeLink):
@@ -58,6 +67,8 @@ class expandData:
 
         driver.get(shoeLink)
 
+        #name = driver.find_element_by_xpath('//*[@id="pdp_product_title"]').text
+        time.sleep(2)
         name = driver.find_element_by_id('pdp_product_title').text
         sizes = []
         colorways = []

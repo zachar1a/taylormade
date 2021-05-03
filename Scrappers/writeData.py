@@ -39,6 +39,20 @@ class writeData:
                 file.close()
             self.writeToFile(fileName, data)
 
+    def openFileOrCreateFileHibbett(self, fileName, data): 
+        print(os.getcwd())
+        pathToHibbett = 'Scrappers/Brand Data/Hibbett/'
+        if fileName in os.listdir(pathToHibbett):
+            os.chdir(pathToHibbett)
+            self.writeToFile(fileName, data)
+            os.chdir('../../../')
+        else:
+            os.chdir(pathToHibbett)
+            with open(fileName, 'a', newline='') as file:
+                csv.writer(file).writerow(['Shoe', 'Link'])
+                file.close()
+            self.writeToFile(fileName, data)
+            os.chdir('../../../')
 
 
 '''
