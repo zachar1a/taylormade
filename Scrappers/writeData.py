@@ -1,4 +1,4 @@
-import os, csv
+import os, csv, pathlib
 
 class writeData:
     '''
@@ -16,6 +16,7 @@ class writeData:
             file.close()
   
     def openFileOrCreateFile(self, fileName, data):
+        os.chdir(pathlib.Path(__file__).parent.absolute())
         pathToHistoricalData = '../Historical Data/'
         if fileName in os.listdir(pathToHistoricalData):
             os.chdir(pathToHistoricalData)
@@ -28,6 +29,7 @@ class writeData:
             self.writeToFile(fileName, data)
 
     def openFileOrCreateFileNike(self, fileName, data):
+        os.chdir(pathlib.Path(__file__).parent.absolute())
         pathToNike = '../Shoe Brands/Nike/'
         if fileName in os.listdir(pathToHistoricalData):
             os.chdir(pathToHistoricalData)
@@ -40,19 +42,20 @@ class writeData:
             self.writeToFile(fileName, data)
 
     def openFileOrCreateFileHibbett(self, fileName, data): 
+        os.chdir(pathlib.Path(__file__).parent.absolute())
         print(os.getcwd())
-        pathToHibbett = 'Scrappers/Brand Data/Hibbett/'
+        pathToHibbett = 'Brand Data/Hibbett/'
         if fileName in os.listdir(pathToHibbett):
             os.chdir(pathToHibbett)
             self.writeToFile(fileName, data)
-            os.chdir('../../../')
+            os.chdir('../../')
         else:
             os.chdir(pathToHibbett)
             with open(fileName, 'a', newline='') as file:
                 csv.writer(file).writerow(['Shoe', 'Link'])
                 file.close()
             self.writeToFile(fileName, data)
-            os.chdir('../../../')
+            os.chdir('../../')
 
 
 '''

@@ -2,12 +2,11 @@ from selenium import webdriver
 from .writeData import writeData
 import time
 
-driver = webdriver.Safari()
 
 
 time.sleep(5)
 
-def loadAllShoes():
+def loadAllShoes(driver):
     flag = True
     try:
         while(driver.find_element_by_link_text('Load More') and flag):
@@ -25,7 +24,7 @@ def loadAllShoes():
     except:
         return
 
-def findAllShoes():
+def findAllShoes(driver):
     time.sleep(10)
     shoes = driver.find_elements_by_class_name('name-link')
 
@@ -37,8 +36,9 @@ def findAllShoes():
         print(shoe.text)
 
 def main():
+    driver = webdriver.Safari()
     hibbett = driver.get('https://www.hibbett.com/men/mens-shoes/')
-    #loadAllShoes()
-    findAllShoes()
+    #loadAllShoes(driver)
+    findAllShoes(driver)
+    driver.close()
 
-main()

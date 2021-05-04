@@ -1,5 +1,5 @@
 from selenium import webdriver
-import requests, json, time, csv, os
+import requests, json, time, csv, os, pathlib
 from .writeData import writeData
 from .expandData import expandData
 
@@ -78,7 +78,7 @@ def findShoesOnPage(driver, url):
 
 
 def main(driver):
-    os.chdir('Scrappers/')
+    os.chdir(pathlib.Path(__file__).parent.absolute())
 
     lifestyle = 'https://www.nike.com/w/mens-lifestyle-shoes-13jrmznik1zy7ok'
     jordan = 'https://www.nike.com/w/mens-jordan-shoes-37eefznik1zy7ok'
