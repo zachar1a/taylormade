@@ -65,7 +65,7 @@ def writeToFile(fileName, data):
 def findShoesOnPage(driver, url):
     driver.get(url) 
 
-    #goToBottom(driver)
+    goToBottom(driver)
 
     shoes = driver.find_elements_by_class_name('product-card__body')
     for shoe in shoes:
@@ -85,10 +85,10 @@ def main(driver):
     running = 'https://www.nike.com/w/mens-running-shoes-37v7jznik1zy7ok'
     basketball = 'https://www.nike.com/w/mens-basketball-shoes-3glsmznik1zy7ok'
 
-    #findShoesOnPage(driver,lifestyle)
-    #findShoesOnPage(driver,jordan)
+    findShoesOnPage(driver,lifestyle)
+    findShoesOnPage(driver,jordan)
     findShoesOnPage(driver,running)
-    #findShoesOnPage(driver,basketball)
+    findShoesOnPage(driver,basketball)
 
     expand = expandData()
     print(os.getcwd())

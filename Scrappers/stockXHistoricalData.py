@@ -1,7 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.keys import Keys
 
-import time
+import time, csv, os, pathlib
 from writeData import writeData
 
 driver = webdriver.Safari()
@@ -56,16 +57,60 @@ def showDataTable(url):
     and clicks on the button to show table
     '''
     driver.get(url)
-    driver.implicitly_wait(2)
-    driver.find_element_by_xpath('//*[@id="market-summary"]/div[2]/div/div[2]/div[3]/button').click()
-    activateLoadMoreButtons()
+    try:
+        if(driver.find_element_by_class_name('not-found-title')):
+            return
+    except:
+        driver.implicitly_wait(2)
+        driver.find_element_by_xpath('//*[@id="market-summary"]/div[2]/div/div[2]/div[3]/button').click()
+        activateLoadMoreButtons()
 
 # TODO  
 # Create a function wrapper that takes in shoe links
 # found in brand data files
+def setBaseData():
+    baseData=[]
+    os.chdir(pathlib.Path(__file__).parent.absolute())
 
-# find()
-showDataTable('https://stockx.com/nike-blazer-mid-77-vintage-white-black')
-showDataTable('https://stockx.com/adidas-yeezy-boost-700-bright-blue')
-showDataTable('https://stockx.com/nike-air-presto-off-white')
-#driver.close()
+#   with open('Brand Data/Hibbet/baseData.csv') as file:
+#       reader = csv.DictReader(file)
+#       for row in reader:
+#           baseData.append(row['Shoe']) 
+#
+    driver.get('https://stockx.com')
+    with open('Brand Data/Nike/baseData.csv') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            baseData.append(row['Shoe'])
+    return baseData
+
+#def writeSalesData(data):
+    
+
+def getHistoricalData(shoes):
+
+    for shoe in shoes:
+        try:
+            search = driver.find_element_by_id('home-search')
+        except:
+            search = driver.find_element_by_id('site-search')
+
+        search.send_keys(shoe)
+        search.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        url = driver.find_element_by_class_name('tile')
+        url = url.find_element_by_tag_name('a').get_attribute('href')
+        showDataTable(url)
+
+
+def main():
+    os.chdir(pathlib.Path(__file__).parent.absolute())
+    shoes = setBaseData()
+
+    getHistoricalData(shoes)
+
+
+main()
+
+driver.close()

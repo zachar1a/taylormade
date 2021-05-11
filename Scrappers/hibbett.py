@@ -30,7 +30,7 @@ def findAllShoes(driver):
 
     wd = writeData()
     for shoe in shoes:
-        data=(shoe.text, shoe.get_attribute('href'))
+        data=(shoe.text.replace('\n',''), shoe.get_attribute('href'))
         wd.openFileOrCreateFileHibbett('baseData.csv', data)
         print(shoe.get_attribute('href'))
         print(shoe.text)
@@ -38,7 +38,7 @@ def findAllShoes(driver):
 def main():
     driver = webdriver.Safari()
     hibbett = driver.get('https://www.hibbett.com/men/mens-shoes/')
-    #loadAllShoes(driver)
+    loadAllShoes(driver)
     findAllShoes(driver)
     driver.close()
 
