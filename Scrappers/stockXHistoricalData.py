@@ -107,7 +107,6 @@ def getHistoricalData(shoes):
 
         # we might have to 'act' like we aer a real user and
         # actually click on the search bar for it to register
-        search.click()
         for s in shoe.split(" "):
             for n in s:
                 search.send_keys(n)
@@ -116,8 +115,7 @@ def getHistoricalData(shoes):
         time.sleep(2)
 
         driver.find_element_by_class_name('list-item-title').click()
-        url = driver.current_url
-        showDataTable(url)
+        showDataTable(driver.current_url)
 
 
 def main():
