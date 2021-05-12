@@ -10,6 +10,7 @@ setup(
             'console_scripts':[
                 'nike=Nike:main',
                 'hibbett=Scrappers.hibbett:main',
+                'stockx=Scappers.stockXHistoricalData:main',
                 'main=Scrappers.Nike:main'
                 ]
         },

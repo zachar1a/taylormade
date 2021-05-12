@@ -84,8 +84,10 @@ def setBaseData():
             baseData.append(row['Shoe'])
     return baseData
 
+# TODO
+# need to write a function that can
+# save the sales data to a csv file
 #def writeSalesData(data):
-    
 
 def getHistoricalData(shoes):
 
@@ -95,12 +97,26 @@ def getHistoricalData(shoes):
         except:
             search = driver.find_element_by_id('site-search')
 
-        search.send_keys(shoe)
-        search.send_keys(Keys.ENTER)
+        #TODO
+        # This is a very hacky implentation to get selenium
+        # to 'slow down'
+        # like the bitch is to fast and I can't utilize the
+        # javascript on the page I want to so I have to
+        # put in sort of a 'speed limit' at which we can
+        # have an auto typer
+
+        # we might have to 'act' like we aer a real user and
+        # actually click on the search bar for it to register
+        search.click()
+        for s in shoe.split(" "):
+            for n in s:
+                search.send_keys(n)
+                time.sleep(.1)
+            search.send_keys(Keys.SPACE)
         time.sleep(2)
 
-        url = driver.find_element_by_class_name('tile')
-        url = url.find_element_by_tag_name('a').get_attribute('href')
+        driver.find_element_by_class_name('list-item-title').click()
+        url = driver.current_url
         showDataTable(url)
 
 
