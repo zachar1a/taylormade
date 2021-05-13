@@ -2,4 +2,5 @@
 hibbett = Scrappers.hibbett:main
 main = Scrappers.Nike:main
 nike = Nike:main
+stockx = Scappers.stockXHistoricalData:main
 

@@ -48,6 +48,7 @@ def writeToFile(fileName, data):
 
     resetPath = '../../'
     pathToBrandData = 'Brand Data/'
+
     print(os.getcwd())
     if 'Nike' in os.listdir(pathToBrandData):
         if fileName in os.listdir(pathToBrandData + 'Nike'):
@@ -77,8 +78,22 @@ def findShoesOnPage(driver, url):
         writeToFile('baseData.csv',data)
 
 
-def main(driver):
+def main():
+    #driver = webdriver.Safari()
     os.chdir(pathlib.Path(__file__).parent.absolute())
+
+    # create Brand Data if it doesnt exist
+    try:
+        os.listdir('Brand Data/')
+    except:
+        os.mkdir('Brand Data/')
+
+    # create Nike dir if it doesnt exist
+    try:
+        os.listdir('Brand Data/Nike/')
+    except:
+        os.mkdir('Brand Data/Nike/')
+
 
     lifestyle = 'https://www.nike.com/w/mens-lifestyle-shoes-13jrmznik1zy7ok'
     jordan = 'https://www.nike.com/w/mens-jordan-shoes-37eefznik1zy7ok'

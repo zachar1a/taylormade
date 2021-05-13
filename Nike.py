@@ -4,10 +4,8 @@ from Scrappers import Nike
 
 def main():
     driver = webdriver.Safari()
+    print('test')
     Nike.main(driver)
 
 
-main()
-
 driver.close()
-
