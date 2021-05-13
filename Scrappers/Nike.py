@@ -3,7 +3,6 @@ import requests, json, time, csv, os, pathlib
 from .writeData import writeData
 from .expandData import expandData
 
-driver = webdriver.Safari()
 
 
 # This is a basic get request to stockX and in order
@@ -38,7 +37,14 @@ def goToBottom(driver):
         if lastCount==lenOfPage:
             match=True
 
-#shoes = driver.find_elements_by_class_name('product-card__title')
+def loadCSVData(fileName):
+    with open(fileName, 'r') as file:
+        reader = csv.DictReader(file)
+        csvData = []
+        for row in reader:
+            csvData.append(row['Shoe'])
+        return csvData
+
 
 def writeToFile(fileName, data):
     '''
@@ -53,15 +59,21 @@ def writeToFile(fileName, data):
     if 'Nike' in os.listdir(pathToBrandData):
         if fileName in os.listdir(pathToBrandData + 'Nike'):
             os.chdir(pathToBrandData + 'Nike')
-            wd = writeData()
-            wd.writeToFile(fileName,data)
-            os.chdir(resetPath)
+
+            currShoes = loadCSVData(fileName)
+            if data[0] in currShoes:
+                os.chdir(resetPath)
+                return
+            else:
+                wd = writeData()
+                wd.writeToFile(fileName,data)
         else:
             os.chdir(pathToBrandData + 'Nike')
             with open(fileName, 'a', newline='') as file:
                 csv.writer(file).writerow(['Shoe', 'Link'])
                 file.close()
                 writeToFile(fileName, data)
+    os.chdir(resetPath)
 
 def findShoesOnPage(driver, url):
     driver.get(url) 
@@ -79,7 +91,7 @@ def findShoesOnPage(driver, url):
 
 
 def main():
-    #driver = webdriver.Safari()
+    driver = webdriver.Safari()
     os.chdir(pathlib.Path(__file__).parent.absolute())
 
     # create Brand Data if it doesnt exist
@@ -95,15 +107,15 @@ def main():
         os.mkdir('Brand Data/Nike/')
 
 
-    lifestyle = 'https://www.nike.com/w/mens-lifestyle-shoes-13jrmznik1zy7ok'
+    #lifestyle = 'https://www.nike.com/w/mens-lifestyle-shoes-13jrmznik1zy7ok'
     jordan = 'https://www.nike.com/w/mens-jordan-shoes-37eefznik1zy7ok'
-    running = 'https://www.nike.com/w/mens-running-shoes-37v7jznik1zy7ok'
-    basketball = 'https://www.nike.com/w/mens-basketball-shoes-3glsmznik1zy7ok'
+    #running = 'https://www.nike.com/w/mens-running-shoes-37v7jznik1zy7ok'
+    #basketball = 'https://www.nike.com/w/mens-basketball-shoes-3glsmznik1zy7ok'
 
-    findShoesOnPage(driver,lifestyle)
+    #findShoesOnPage(driver,lifestyle)
     findShoesOnPage(driver,jordan)
-    findShoesOnPage(driver,running)
-    findShoesOnPage(driver,basketball)
+    #findShoesOnPage(driver,running)
+    #findShoesOnPage(driver,basketball)
 
     expand = expandData()
     print(os.getcwd())
@@ -112,8 +124,8 @@ def main():
     for shoe in shoes:
         print(shoe['Link'])
         expand.getShoeDetails(driver,'Nike', 'Nike.csv', shoe['Link'])
+    driver.close()
 
 if __name__ == '__main__':
     main()
 
-driver.close()
