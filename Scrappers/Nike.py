@@ -98,15 +98,15 @@ def main():
         os.mkdir('Brand Data/Nike/')
 
 
-    #lifestyle = 'https://www.nike.com/w/mens-lifestyle-shoes-13jrmznik1zy7ok'
+    lifestyle = 'https://www.nike.com/w/mens-lifestyle-shoes-13jrmznik1zy7ok'
     jordan = 'https://www.nike.com/w/mens-jordan-shoes-37eefznik1zy7ok'
-    #running = 'https://www.nike.com/w/mens-running-shoes-37v7jznik1zy7ok'
-    #basketball = 'https://www.nike.com/w/mens-basketball-shoes-3glsmznik1zy7ok'
+    running = 'https://www.nike.com/w/mens-running-shoes-37v7jznik1zy7ok'
+    basketball = 'https://www.nike.com/w/mens-basketball-shoes-3glsmznik1zy7ok'
 
-    #findShoesOnPage(driver,lifestyle)
+    findShoesOnPage(driver,lifestyle)
     findShoesOnPage(driver,jordan)
-    #findShoesOnPage(driver,running)
-    #findShoesOnPage(driver,basketball)
+    findShoesOnPage(driver,running)
+    findShoesOnPage(driver,basketball)
 
     expand = expandData()
     print(os.getcwd())
