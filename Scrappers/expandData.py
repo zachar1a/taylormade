@@ -69,7 +69,19 @@ class expandData:
 
         #name = driver.find_element_by_xpath('//*[@id="pdp_product_title"]').text
         time.sleep(2)
-        name = driver.find_element_by_id('pdp_product_title').text
+        try:
+            if driver.find_element_by_class_name('not-found').text == 'THE PRODUCT YOU ARE LOOKING FOR IS NO LONGER AVAILABLE':
+                print('in try')
+                return
+        except:
+            print('in except')
+            pass
+
+
+        try:
+            name = driver.find_element_by_id('pdp_product_title').text
+        except:
+            name = shoeLink
         sizes = []
         colorways = []
         
@@ -80,7 +92,10 @@ class expandData:
                 print(c.get_attribute('href').split('/')[-1])
                 colorways.append(c.get_attribute('href').split('/')[-1]) 
         except:
-            colorways.append(driver.find_element_by_class_name('description-preview__style-color').text)
+            try:
+                colorways.append(driver.find_element_by_class_name('description-preview__style-color').text)
+            except:
+                colorways = []
 
         for s in size:
             print(s.text)

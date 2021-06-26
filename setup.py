@@ -11,6 +11,7 @@ setup(
                 'nike=Nike:main',
                 'hibbett=Scrappers.hibbett:main',
                 'stockx=Scappers.stockXHistoricalData:main',
+                'dicks=Scrappers.dicksSportingGoods:main',
                 'main=Scrappers.Nike:main'
                 ]
         },
