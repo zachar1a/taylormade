@@ -1,5 +1,6 @@
 from selenium import webdriver
 #from .writeData import writeData
+from .expandHibbet import expandHibbet
 import time, csv, os, pathlib
 import functools
 
@@ -84,7 +85,14 @@ def main():
         os.mkdir('Brand Data/Hibbett/')
 
 
-    hibbett = driver.get('https://www.hibbett.com/men/mens-shoes/')
-    #loadAllShoes(driver)
-    findAllShoes(driver)
+    urls = [
+        'https://www.hibbett.com/men/mens-shoes/basketball-shoes/',
+        'https://www.hibbett.com/men/mens-shoes/casual-shoes/',
+        'https://www.hibbett.com/men/mens-shoes/running-shoes/'
+    ]
+    for url in urls:
+        hibbett = driver.get(url)
+        loadAllShoes(driver)
+        findAllShoes(driver)
+
     driver.close()

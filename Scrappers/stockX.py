@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
+import os
 
 import time, csv, os, pathlib
 from writeData import writeData
@@ -33,9 +34,10 @@ def activateLoadMoreButtons(driver):
     #driver.find_element_by_xpath('//*[@id="chakra-modal--body-148"]/div/button').click()
     shoeName = driver.find_element_by_xpath('//*[@id="product-header"]/div[1]/div/h1').text + str('.csv')
     try:
-        while(driver.find_element_by_css_selector('button.css-13xjp80')):
-            goToBottom(driver)
-            driver.find_element_by_css_selector('button.css-13xjp80').click()
+        while(driver.find_element_by_xpath("//*[contains(text(), 'Load More')]")):
+            print('hello world')
+            #goToBottom(driver)
+            driver.find_element_by_xpath("//*[contains(text(), 'Load More')]").click()
             time.sleep(1)
     except:
         print("Either finished or no button")
@@ -88,6 +90,28 @@ def showDataTable(driver):
 
 #####
 
+def getShoeUrl():
+    shoeNames = []
+    os.chdir(pathlib.Path(__file__).parent.absolute())
+    print(os.getcwd())
+
+    try:
+        for d in os.listdir('Brand Data/'):
+            if d == '.DS_Store':
+                continue
+            os.chdir('Brand Data/' + d + '/')
+            for f in os.listdir():
+                if f == 'baseData.csv':
+                    with open(f ,'r') as file:
+                        reader = csv.DictReader(file)
+                        for row in reader:
+                            shoeNames.append((d,row['Shoe']))
+
+            os.chdir('../../')
+        return shoeNames
+    except:
+        print('hello world')
+
 
 
 
@@ -99,15 +123,19 @@ def searchForShoe(driver,url, shoeName):
     goToBottom(driver)
 
     click = driver.find_elements_by_class_name('list-item-content')
-    click[0].click()
+    try:
+        click[0].click()
+    except:
+        return
     showDataTable(driver)
 
 
 def main():
     driver = webdriver.Safari()
+    shoeNames = getShoeUrl()
     url = 'https://stockx.com'
-    shoeName = 'Jordan 6 Rings'
-    searchForShoe(driver,url,shoeName)
+    for shoe in shoeNames:
+        searchForShoe(driver,url,shoe[1])
     time.sleep(3)
 
 main()
