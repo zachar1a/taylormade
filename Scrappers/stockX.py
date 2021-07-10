@@ -4,7 +4,7 @@ from selenium.webdriver.common.keys import Keys
 import os
 
 import time, csv, os, pathlib
-from writeData import writeData
+from .writeData import writeData
 
 def goToBottom(driver):
     '''
@@ -138,4 +138,4 @@ def main():
         searchForShoe(driver,url,shoe[1])
     time.sleep(3)
 
-main()
+#main()
