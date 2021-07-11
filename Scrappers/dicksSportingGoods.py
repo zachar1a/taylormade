@@ -1,5 +1,5 @@
 from selenium import webdriver
-import requests, json, time, csv, os, pathlib
+import json, time, csv, os, pathlib
 from .writeData import writeData
 from .expandData import expandData
 
