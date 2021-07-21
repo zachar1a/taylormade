@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException as NSEE
 import os
 
 import time, csv, os, pathlib
@@ -63,7 +64,8 @@ def readDataTable(driver, shoeName):
         time = tr.find_elements_by_tag_name('td')[1].text
         size = tr.find_elements_by_tag_name('td')[2].text
         price= tr.find_elements_by_tag_name('td')[3].text
-        data = (date, time, size, price)
+        msrp = driver.find_elements_by_class_name('')
+        data = (date, time, size, price, msrp)
         wd.openFileOrCreateFile(shoeName, data)
         print(tr.text)
 
@@ -78,12 +80,16 @@ def showDataTable(driver):
     and clicks on the button to show table
     '''
     #driver.get(url)
+    driver.implicitly_wait(2)
     try:
-        if(driver.find_element_by_class_name('not-found-title')):
+        print('in try')
+        if(driver.find_element_by_class_name('not-found-container')):
             return
     except:
-        driver.implicitly_wait(2)
-        driver.find_element_by_xpath('//*[@id="market-summary"]/div[2]/div/div[2]/div[3]/button').click()
+        try:
+            driver.find_element_by_xpath("//*[contains(text(), 'View All Sales')]").click()
+        except NSEE:
+            driver.find_element_by_xpath("//*[cotaines(text(), 'View Sales')]").click()
         activateLoadMoreButtons(driver)
 
 
@@ -135,6 +141,7 @@ def main():
     shoeNames = getShoeUrl()
     url = 'https://stockx.com'
     for shoe in shoeNames:
+        print(shoe)
         searchForShoe(driver,url,shoe[1])
     time.sleep(3)
 
