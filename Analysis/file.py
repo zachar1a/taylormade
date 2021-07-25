@@ -11,10 +11,16 @@ class shoeFile:
         self.shoeName = sn
         self.shoeDF = pd.read_csv('../Historical Data/'+self.shoeName)
         self.salesInPastMonth = 0
+
+        ''' strip $ from Price and cast value from string to int '''
         self.shoeDF['Price'] = self.shoeDF['Price'].apply(lambda x: x.replace('$','') if '$' in list(x) else x)
         self.shoeDF['Price'] = self.shoeDF['Price'].apply(pd.to_numeric)
+
+        ''' strip $ from MSRP and cast value from string to int '''
         self.shoeDF['MSRP']  = self.shoeDF['MSRP'].apply(lambda x: x.replace('$','') if '$' in list(x) else x)
         self.shoeDF['MSRP']  = self.shoeDF['MSRP'].apply(pd.to_numeric)
+
+        ''' MSRP is added to each row so the mean is the MSRP '''
         self.MSRP = self.shoeDF['MSRP'].mean()
 
         self.uniqueDays = self.shoeDF['Date'].unique()[:31]
@@ -42,6 +48,10 @@ class shoeFile:
                 file.close()
                 self.writeToFile('Analysis.csv', data)
 
+# All of the brands are held inside of the Historical Data dir
+# this iterates through all the brands and finds the historical data
+# from the shoes in each brand dir and runs it through the
+# analysis
 for d in os.listdir('../Historical Data/'):
     if d == '.DS_Store':
         continue
