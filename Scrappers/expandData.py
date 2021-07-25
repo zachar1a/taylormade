@@ -1,12 +1,16 @@
 from selenium import webdriver
-import csv, time, os
+import csv, time, os, pathlib
+import pandas as pd
 from .writeData import writeData
+
+
 
 
 class expandData:
 
 
     def __init__(self):
+        self.initPath = os.getcwd()
         self.pathToBrandData = 'Brand Data/'
         self.resetPath = '../../'
 
@@ -42,7 +46,7 @@ class expandData:
         '''
 
         print(os.getcwd())
-        if os.getcwd() == '/Users/zachar1a/Desktop/taylormade/Scrappers/Brand Data/Nike':
+        if os.getcwd() == str(self.initPath) + 'Brand Data/Nike':
             os.chdir(self.resetPath)
         if brand in os.listdir(self.pathToBrandData):
             if fileName in os.listdir(self.pathToBrandData + brand):
@@ -53,11 +57,10 @@ class expandData:
             else:
                 os.chdir(self.pathToBrandData + brand)
                 with open(fileName, 'a', newline='') as file:
-                    csv.writer(file).writerow(['Shoe', 'Sizes', 'Colorways'])
+                    csv.writer(file).writerow(['Shoe', 'Sizes', 'Colorways', 'MSRP'])
                     file.close()
                     self.writeToFile('Nike',fileName, data)
                 os.chdir(self.resetPath)
-
 
     def getShoeDetails(self, driver, brand, fileName, shoeLink):
         '''
@@ -101,7 +104,18 @@ class expandData:
             print(s.text)
             sizes.append(s.text)
 
-        data = (name, sizes, colorways)
+        try:
+            price = driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div/div[1]/div[2]/div/section[1]/div[2]/aside/div/div[1]/div[1]').text
+            print(price)
+        except:
+            price = driver.find_element_by_xpath('//*[@id="PDP"]/div/div[3]/div[1]/div[1]/div/div[1]/div[2]/div/div').text
+            print(price)
+
+        data = (name, sizes, colorways, price)
         self.writeToFile(brand, fileName, data)
 
-
+    def syncFiles(self):
+        expandedData = pd.read_csv('Brand Data/Nike/Nike.csv')
+        baseData     = pd.read_csv('Brand Data/Nike/baseData.csv')
+        baseData['MSRP'] = expandedData['MSRP']
+        baseData.to_csv('Brand Data/Nike/baseData.csv')

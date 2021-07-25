@@ -9,13 +9,26 @@ class writeData:
     def __init__(self):
         print('initing')
 
-
     def writeToFile(self, fileName, data):
+        ''' write to specified file '''
         with open (fileName, 'a+', newline='') as file:
             csv.writer(file).writerow(data)
             file.close()
-  
+
+    def openFileOrCreateFileAnalysis(self, data):
+        os.chdir(pathlib.Path(__file__).parent.absolute())
+        if 'Analysis.csv' in os.listdir():
+            self.writeToFile('Analysis.csv', data)
+        else:
+            with open('Analysis.csv', 'a', newline='') as file:
+                csv.writer(file).writerow(['Shoe Name','Unique Days', 'Sales in past month',
+                                           'Total Sales', 'MSRP', 'Mean', 'Total Mean', 'Median',
+                                           'Total Median', 'Ratio Buy to Sale', 'Ratio Sale to Buy', 'Sizes'])
+                file.close()
+            self.writeToFile('Analysis.csv', data)
+
     def openFileOrCreateFile(self, fileName, data):
+        ''' if file !Exist then create file '''
         os.chdir(pathlib.Path(__file__).parent.absolute())
         pathToHistoricalData = '../Historical Data/'
         if fileName in os.listdir(pathToHistoricalData):
@@ -24,11 +37,12 @@ class writeData:
         else:
             os.chdir(pathToHistoricalData)
             with open(fileName, 'a', newline='') as file:
-                csv.writer(file).writerow(['Date', 'Time', 'Size', 'Price'])
+                csv.writer(file).writerow(['Date', 'Time', 'Size', 'Price', 'MSRP'])
                 file.close()
             self.writeToFile(fileName, data)
 
     def openFileOrCreateFileNike(self, fileName, data):
+        ''' Creates an expandedData file for Nike '''
         os.chdir(pathlib.Path(__file__).parent.absolute())
         pathToNike = '../Shoe Brands/Nike/'
         if fileName in os.listdir(pathToHistoricalData):
@@ -37,11 +51,12 @@ class writeData:
         else:
             os.chdir(pathToHistoricalData)
             with open(fileName, 'a', newline='') as file:
-                csv.writer(file).writerow(['Date', 'Time', 'Size', 'Price'])
+                csv.writer(file).writerow(['Date', 'Time', 'Size', 'Price', 'MSRP'])
                 file.close()
             self.writeToFile(fileName, data)
 
-    def openFileOrCreateFileHibbett(self, fileName, data): 
+    def openFileOrCreateFileHibbett(self, fileName, data):
+        ''' creates a baseData file for Hibbett '''
         os.chdir(pathlib.Path(__file__).parent.absolute())
         print(os.getcwd())
         pathToHibbett = 'Brand Data/Hibbett/'
@@ -52,27 +67,9 @@ class writeData:
         else:
             os.chdir(pathToHibbett)
             with open(fileName, 'a', newline='') as file:
-                csv.writer(file).writerow(['Shoe', 'Link'])
+                csv.writer(file).writerow(['Shoe', 'Link', 'MSRP'])
                 file.close()
             self.writeToFile(fileName, data)
             os.chdir('../../')
 
 
-'''
-    def returnDateAndTimeArray(self, fileName):
-        timeArray = []
-        pathToHistoricalData = '../Historical Data/'
-        resetPath = '../Scrappers/'
-        if fileName in os.listdir(pathToHistoricalData):
-            os.chdir(pathToHistoricalData)
-            with open(fileName, 'r') as file:
-                file = csv.DictReader(file)
-                for row in file:
-                    print(row['Time'])
-                    timeArray.append((row['Date'],row['Time']))
-            os.chdir(resetPath)
-            return timeArray
-        else:
-            os.chdir(resetPath)
-            return None
-'''

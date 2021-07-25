@@ -38,11 +38,7 @@ def loadCSVData(fileName):
 
 
 def writeToFile(fileName, data):
-    '''
-    Checks if file is in dir if not
-    then creates it
-    '''
-
+    ''' Checks if file is in dir if not then creates it '''
     resetPath = '../../'
     pathToBrandData = 'Brand Data/'
 
@@ -50,7 +46,6 @@ def writeToFile(fileName, data):
     if 'Nike' in os.listdir(pathToBrandData):
         if fileName in os.listdir(pathToBrandData + 'Nike'):
             os.chdir(pathToBrandData + 'Nike')
-
             currShoes = loadCSVData(fileName)
             if data[0] in currShoes:
                 os.chdir(resetPath)
@@ -67,12 +62,11 @@ def writeToFile(fileName, data):
     os.chdir(resetPath)
 
 def findShoesOnPage(driver, url):
-    driver.get(url) 
-
+    driver.get(url)
     goToBottom(driver)
-
     shoes = driver.find_elements_by_class_name('product-card__body')
-    for shoe in shoes:
+    print(driver.find_elements_by_class_name('product-price is--current-price'))
+    for idx,shoe in enumerate(shoes):
         link = shoe.find_element_by_class_name('product-card__link-overlay')
         print(link.text)
         print(link.get_attribute('href'))
@@ -82,6 +76,7 @@ def findShoesOnPage(driver, url):
 
 
 def main():
+    ''' main func for nike '''
     driver = webdriver.Safari()
     os.chdir(pathlib.Path(__file__).parent.absolute())
 
@@ -98,23 +93,24 @@ def main():
         os.mkdir('Brand Data/Nike/')
 
 
-    lifestyle = 'https://www.nike.com/w/mens-lifestyle-shoes-13jrmznik1zy7ok'
+    #lifestyle = 'https://www.nike.com/w/mens-lifestyle-shoes-13jrmznik1zy7ok'
     jordan = 'https://www.nike.com/w/mens-jordan-shoes-37eefznik1zy7ok'
-    running = 'https://www.nike.com/w/mens-running-shoes-37v7jznik1zy7ok'
-    basketball = 'https://www.nike.com/w/mens-basketball-shoes-3glsmznik1zy7ok'
+    #running = 'https://www.nike.com/w/mens-running-shoes-37v7jznik1zy7ok'
+    #basketball = 'https://www.nike.com/w/mens-basketball-shoes-3glsmznik1zy7ok'
 
-    findShoesOnPage(driver,lifestyle)
+    #findShoesOnPage(driver,lifestyle)
     findShoesOnPage(driver,jordan)
-    findShoesOnPage(driver,running)
-    findShoesOnPage(driver,basketball)
+    #findShoesOnPage(driver,running)
+    #findShoesOnPage(driver,basketball)
 
     expand = expandData()
     print(os.getcwd())
     shoes = expand.getCsvData('Nike', 'baseData.csv')
 
     for shoe in shoes:
-        print(shoe['Link'])
-        expand.getShoeDetails(driver,'Nike', 'Nike.csv', shoe['Link'])
+       print(shoe['Link'])
+       expand.getShoeDetails(driver,'Nike', 'Nike.csv', shoe['Link'])
+    expand.syncFiles()
     driver.close()
 
 if __name__ == '__main__':

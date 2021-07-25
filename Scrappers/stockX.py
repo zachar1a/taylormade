@@ -8,10 +8,7 @@ import time, csv, os, pathlib
 from .writeData import writeData
 
 def goToBottom(driver):
-    '''
-    Use this to auto scroll to bottom of page in viewport to loard more items
-    in a non-pagenazed web page
-    '''
+    ''' auto-scrolls to the bottom of page  so resources can load in '''
 
     lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
     match=False
@@ -22,85 +19,12 @@ def goToBottom(driver):
         if lastCount==lenOfPage:
             match=True
 
-
-
-
-#####
-def activateLoadMoreButtons(driver):
-    '''
-    This is called in the showDataTable function
-    and locates and clicks on the load more button
-    and waits 1 second after every emulated click
-    '''
-    #driver.find_element_by_xpath('//*[@id="chakra-modal--body-148"]/div/button').click()
-    shoeName = driver.find_element_by_xpath('//*[@id="product-header"]/div[1]/div/h1').text + str('.csv')
-    try:
-        while(driver.find_element_by_xpath("//*[contains(text(), 'Load More')]")):
-            print('hello world')
-            #goToBottom(driver)
-            driver.find_element_by_xpath("//*[contains(text(), 'Load More')]").click()
-            time.sleep(1)
-    except:
-        print("Either finished or no button")
-        readDataTable(driver, shoeName)
-
-
-def readDataTable(driver, shoeName):
-    '''
-    @param shoeName
-    shoeName is a string with .csv appended to it
-
-    The function reads a data table with the attributes:
-    date | time | size | price
-    and appends data only if the date and time don't
-    show up in the same row
-    '''
-    table = driver.find_element_by_xpath('//*[@id="480"]')
-    table = table.find_element_by_tag_name('tbody')
-    tableRows = table.find_elements_by_tag_name('tr')
-    wd = writeData()
-    for tr in tableRows:
-        date = tr.find_elements_by_tag_name('td')[0].text
-        time = tr.find_elements_by_tag_name('td')[1].text
-        size = tr.find_elements_by_tag_name('td')[2].text
-        price= tr.find_elements_by_tag_name('td')[3].text
-        msrp = driver.find_elements_by_class_name('')
-        data = (date, time, size, price, msrp)
-        wd.openFileOrCreateFile(shoeName, data)
-        print(tr.text)
-
-def showDataTable(driver):
-    '''
-    @param url
-    url to desired shoe
-
-    The function reaches the desired
-    url then waits 2 seconds to allow
-    the page to load and then locates
-    and clicks on the button to show table
-    '''
-    #driver.get(url)
-    driver.implicitly_wait(2)
-    try:
-        print('in try')
-        if(driver.find_element_by_class_name('not-found-container')):
-            return
-    except:
-        try:
-            driver.find_element_by_xpath("//*[contains(text(), 'View All Sales')]").click()
-        except NSEE:
-            driver.find_element_by_xpath("//*[cotaines(text(), 'View Sales')]").click()
-        activateLoadMoreButtons(driver)
-
-
-
-#####
-
 def getShoeUrl():
-    shoeNames = []
+    ''' iterates through the dirs in Brand Data and finds the 'baseData' files in each '''
+
+    shoeNamesAndMSRP = []
     os.chdir(pathlib.Path(__file__).parent.absolute())
     print(os.getcwd())
-
     try:
         for d in os.listdir('Brand Data/'):
             if d == '.DS_Store':
@@ -111,17 +35,20 @@ def getShoeUrl():
                     with open(f ,'r') as file:
                         reader = csv.DictReader(file)
                         for row in reader:
-                            shoeNames.append((d,row['Shoe']))
-
+                            print(row)
+                            shoeNamesAndMSRP.append((d,row['Shoe'],row['MSRP']))
             os.chdir('../../')
-        return shoeNames
     except:
         print('hello world')
 
+    return shoeNamesAndMSRP
 
+def searchForShoe(driver,url, shoeName, shoeMSRP):
+    '''
+        enters search name into the stockx search bar and clicks
+        on the first shoe in the drop-down menu
+    '''
 
-
-def searchForShoe(driver,url, shoeName):
     driver.get(url)
 
     searchBar = driver.find_element_by_id('home-search')
@@ -133,16 +60,70 @@ def searchForShoe(driver,url, shoeName):
         click[0].click()
     except:
         return
-    showDataTable(driver)
+    showDataTable(driver, shoeMSRP)
 
+def showDataTable(driver, shoeMSRP):
+    ''' finds and locates the 'Load More' button in the datatable for stockx '''
+
+    driver.implicitly_wait(2)
+    try:
+        print('in try')
+        if driver.find_element_by_xpath("//*[contains(text(), 'OOPS!')]"):
+            return
+    except:
+        try:
+            if driver.find_element_by_xpath("//*[contains(text(), 'View All Sales')]"):
+                driver.find_element_by_xpath("//*[contains(text(), 'View All Sales')]").click()
+        except NSEE:
+            if driver.find_element_by_xpath("//*[cotaines(text(), 'View Sales')]"):
+                driver.find_element_by_xpath("//*[cotaines(text(), 'View Sales')]").click()
+        activateLoadMoreButtons(driver, shoeMSRP)
+
+def activateLoadMoreButtons(driver, shoeMSRP):
+    ''' Finds the 'Load More' buttons in the table and clicks it '''
+
+    shoeName = driver.find_element_by_xpath('//*[@id="product-header"]/div[1]/div/h1').text + str('.csv')
+    try:
+        while(driver.find_element_by_xpath("//*[contains(text(), 'Load More')]")):
+            print('hello world')
+            #goToBottom(driver)
+            driver.find_element_by_xpath("//*[contains(text(), 'Load More')]").click()
+            time.sleep(1)
+    except:
+        print("Either finished or no button")
+        readDataTable(driver, shoeName, shoeMSRP)
+
+def readDataTable(driver, shoeName, shoeMSRP):
+    '''
+    @param shoeName
+    shoeName is a string with .csv appended to it
+
+    The function reads a data table with the attributes:
+    date | time | size | price
+    and appends data only if the date and time don't
+    show up in the same row
+    '''
+
+    table = driver.find_element_by_xpath('//*[@id="480"]')
+    table = table.find_element_by_tag_name('tbody')
+    tableRows = table.find_elements_by_tag_name('tr')
+    wd = writeData()
+
+    for tr in tableRows:
+        date = tr.find_elements_by_tag_name('td')[0].text
+        time = tr.find_elements_by_tag_name('td')[1].text
+        size = tr.find_elements_by_tag_name('td')[2].text
+        price= tr.find_elements_by_tag_name('td')[3].text
+        # shoeMSRP = shoeMSRP
+        data = (date, time, size, price, shoeMSRP)
+        wd.openFileOrCreateFile(shoeName, data)
+        print(tr.text)
 
 def main():
     driver = webdriver.Safari()
-    shoeNames = getShoeUrl()
+    shoeNamesAndMSRP = getShoeUrl()
     url = 'https://stockx.com'
-    for shoe in shoeNames:
+    for shoe in shoeNamesAndMSRP:
         print(shoe)
-        searchForShoe(driver,url,shoe[1])
+        searchForShoe(driver,url,shoe[1], shoe[2])
     time.sleep(3)
-
-#main()
